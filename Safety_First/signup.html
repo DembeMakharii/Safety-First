@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Safety Reporting System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Add basic styles if styles.css is missing */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .auth-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .auth-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .auth-btn:hover {
+            background-color: #45a049;
+        }
+        #alertContainer {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Page -->
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2><i class="fas fa-lock"></i> Safety System Access</h2>
+            <p>Secure access to industrial safety reporting</p>
+        </div>
+
+        <div class="auth-form">
+            <div id="alertContainer"></div>
+
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab" onclick="window.location.href='login.html'"><i class="fas fa-sign-in-alt"></i> Login</button>
+                <button type="button" class="auth-tab active"><i class="fas fa-user-plus"></i> Sign Up</button>
+            </div>
+
+            <!-- Signup Form -->
+            <div>
+                <form id="signupFormElement">
+                    <div class="form-group">
+                        <label for="signupName"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="signupName" name="name" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" id="signupEmail" name="email" required placeholder="your.email@company.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupPassword"><i class="fas fa-key"></i> Password</label>
+                        <input type="password" id="signupPassword" name="password" required placeholder="Create a secure password" minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupConfirmPassword"><i class="fas fa-key"></i> Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department"><i class="fas fa-building"></i> Department</label>
+                        <select id="department" name="department" required>
+                            <option value="">Select your department</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="warehouse">Warehouse</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="quality">Quality Control</option>
+                            <option value="safety">Safety Department</option>
+                            <option value="admin">Administration</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tag"></i> User Role</label>
+                        <div class="role-selection">
+                            <div class="role-option">
+                                <input type="radio" id="roleWorker" name="role" value="worker" checked>
+                                <label for="roleWorker" class="role-label"><i class="fas fa-hard-hat"></i> Worker</label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" id="roleSafetyOfficer" name="role" value="safety_officer">
+                                <label for="roleSafetyOfficer" class="role-label"><i class="fas fa-user-shield"></i> Safety Officer</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-check-circle"></i> Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Basic signup function if script.js is not properly linked
+        function signup(userData) {
+            // Simple validation
+            if (userData.password !== userData.confirmPassword) {
+                showAlert('Passwords do not match', 'error');
+                return false;
+            }
+
+            // Get existing users or initialize empty array
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Check if user already exists
+            const userExists = users.some(user => user.email === userData.email);
+            if (userExists) {
+                showAlert('User with this email already exists', 'error');
+                return false;
+            }
+
+            // Create new user object (without confirmPassword)
+            const newUser = {
+                name: userData.name,
+                email: userData.email,
+                password: userData.password,
+                department: userData.department,
+                role: userData.role
+            };
+
+            // Add new user and save to localStorage
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Set as current user
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            showAlert('Account created successfully!', 'success');
+            return true;
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `
+                <div class="alert-${type}">
+                    ${message}
+                </div>
+            `;
+            
+            // Remove alert after 5 seconds
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in from localStorage
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Form submission
+            const signupForm = document.getElementById('signupFormElement');
+            if (signupForm) {
+                signupForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    
+                    const userData = {
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        password: formData.get('password'),
+                        confirmPassword: formData.get('confirmPassword'),
+                        department: formData.get('department'),
+                        role: formData.get('role')
+                    };
+                    
+                    const success = signup(userData);
+                    
+                    if (success) {
+                        // Redirect after successful signup
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 1500);
+                    }
+                });
+            } else {
+                console.error('Signup form not found');
+            }
+        });
+    </script>
+</body>
+</html>
