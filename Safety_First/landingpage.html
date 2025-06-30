@@ -378,6 +378,33 @@
             animation: fadeInUp 1s ease;
         }
 
+        /* Three columns for steps */
+        .steps.three-cols {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        .steps.three-cols .step {
+            flex: 1 1 0;
+            min-width: 0;
+            max-width: 350px;
+        }
+        @media (max-width: 1100px) {
+            .steps.three-cols {
+                flex-wrap: wrap;
+            }
+            .steps.three-cols .step {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 900px) {
+            .steps.three-cols {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero {
@@ -430,17 +457,17 @@
                 <p class="fade-in">Empower your workforce to report hazards instantly and improve workplace safety</p>
                 <div class="hero-buttons fade-in">
                     <a href="signup.html" class="btn btn-primary btn-large"><i class="fas fa-rocket"></i> Get Started</a>
-                    <a href="login.html" class="btn btn-secondary btn-large"><i class="fas fa-sign-in-alt"></i> Existing User</a>
                 </div>
             </div>
             <div class="hero-image fade-in">
-                <img src="https://images.unsplash.com/photo-1581093196270-1a1b6af15dbd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Safety Reporting System">
+                <img src="\Safety_First\images\exterior-view-modern-industrial-building_756748-45399.avif" alt="Safety Reporting System">
+                
             </div>
         </header>
 
         <section id="how-it-works" class="how-it-works">
             <h2 class="section-title"><i class="fas fa-cogs"></i> How It Works</h2>
-            <div class="steps">
+            <div class="steps three-cols">
                 <div class="step fade-in">
                     <div class="step-number">1</div>
                     <div class="step-content">
@@ -460,13 +487,6 @@
                     <div class="step-content">
                         <h3>Safety Team Notified</h3>
                         <p>The appropriate safety personnel are immediately alerted based on hazard severity and location.</p>
-                    </div>
-                </div>
-                <div class="step fade-in">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h3>Resolution Tracking</h3>
-                        <p>Follow the progress through completion with automated reminders and verification workflows.</p>
                     </div>
                 </div>
             </div>
@@ -510,10 +530,7 @@
             <div class="cta-content fade-in">
                 <h2>Ready to Improve Your Workplace Safety?</h2>
                 <p>Join hundreds of companies that trust our safety reporting system to protect their most valuable asset - their people.</p>
-                <div class="cta-buttons">
-                    <a href="signup.html" class="btn btn-primary btn-large"><i class="fas fa-user-plus"></i> Sign Up Now</a>
-                    <a href="login.html" class="btn btn-secondary btn-large"><i class="fas fa-sign-in-alt"></i> Existing User</a>
-                </div>
+
             </div>
         </section>
 
