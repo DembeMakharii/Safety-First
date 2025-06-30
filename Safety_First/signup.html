@@ -216,11 +216,14 @@
                     };
                     
                     const success = signup(userData);
-                    
                     if (success) {
                         // Redirect after successful signup
                         setTimeout(() => {
-                            window.location.href = 'login.html';
+                            if (userData.role === 'safety_officer') {
+                                window.location.href = 'safety-officer.html';
+                            } else {
+                                window.location.href = 'login.html';
+                            }
                         }, 1500);
                     }
                 });

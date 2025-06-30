@@ -181,23 +181,25 @@ function submitSafetyReport() {
 function displayReports() {
     const container = document.getElementById('reportsContainer');
     if (!container) return;
-    
+    // Always reload from localStorage to reflect latest status
+    reports = JSON.parse(localStorage.getItem('safetyReports')) || [];
     if (reports.length === 0) {
         container.innerHTML = '<p style="text-align: center; color: #666;">No reports submitted yet</p>';
         return;
     }
-
     // Filter reports to show only those by current user unless they're a safety officer
     let filteredReports = reports;
     if (currentUser && currentUser.role !== 'safety_officer') {
         filteredReports = reports.filter(r => r.user === currentUser.email);
     }
-    
     container.innerHTML = filteredReports.map(report => `
         <div class="report-item">
             <div class="report-header">
                 <h4>${report.hazardType.replace('-', ' ').toUpperCase()}</h4>
                 <span class="severity-badge badge-${report.severity}">${report.severity.toUpperCase()}</span>
+                <span class="status-badge" style="background-color: ${getStatusColor(report.status)}">
+                    ${report.status.toUpperCase()}
+                </span>
             </div>
             <p><strong>Location:</strong> ${report.location}</p>
             <p><strong>Description:</strong> ${report.description}</p>
@@ -206,6 +208,43 @@ function displayReports() {
             ${report.photo ? `<div class="photo-preview"><img src="${report.photo}" alt="Report photo"></div>` : ''}
         </div>
     `).join('');
+}
+
+function getStatusColor(status) {
+    switch(status) {
+        case 'pending': return '#ff9800';
+        case 'in-progress': return '#2196f3';
+        case 'resolved': return '#4caf50';
+        case 'rejected': return '#f44336';
+        default: return '#9e9e9e';
+    }
+}
+
+// --- Safety Officer Dashboard Functions ---
+
+// Get all reports from localStorage
+function getAllReports() {
+    return JSON.parse(localStorage.getItem('safetyReports')) || [];
+}
+
+// Update the status of a report by ID
+function updateReportStatus(reportId, newStatus) {
+    let reports = JSON.parse(localStorage.getItem('safetyReports')) || [];
+    const idx = reports.findIndex(r => r.id === reportId);
+    if (idx !== -1) {
+        reports[idx].status = newStatus;
+        localStorage.setItem('safetyReports', JSON.stringify(reports));
+        return true;
+    }
+    return false;
+}
+
+// Delete a report by ID
+function deleteReport(reportId) {
+    let reports = JSON.parse(localStorage.getItem('safetyReports')) || [];
+    reports = reports.filter(r => r.id !== reportId);
+    localStorage.setItem('safetyReports', JSON.stringify(reports));
+    return true;
 }
 
 // Initialize reports display if on the right page
